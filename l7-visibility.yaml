@@ -1,0 +1,43 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: untitled-policy
+spec:
+  endpointSelector:
+    matchLabels:
+      "k8s:io.kubernetes.pod.namespace": default
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+      - matchLabels:
+          "k8s:io.kubernetes.pod.namespace": default
+      toPorts:
+      - ports:
+        - port: "80"
+          protocol: TCP
+        - port: "8080"
+          protocol: TCP
+        - port: "3550"
+          protocol: TCP
+        - port: "5050"
+          protocol: TCP
+        - port: "6379"
+          protocol: TCP
+        - port: "7000"
+          protocol: TCP
+        - port: "7070"
+          protocol: TCP
+        - port: "50051"
+          protocol: TCP
+        rules:
+          http: [{}]
